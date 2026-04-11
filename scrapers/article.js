@@ -1,8 +1,8 @@
 function scrapeArticle() {
   // Use Readability-inspired heuristics to extract article content
-  const title = document.title.trim() ||
+  const title = (document.title.trim() ||
     document.querySelector('h1')?.innerText.trim() ||
-    'Untitled Article';
+    'Untitled Article').substring(0, 300);
 
   // Try common article containers
   const selectors = [

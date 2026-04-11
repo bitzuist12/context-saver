@@ -10,10 +10,10 @@ const SITE_SCRAPERS = {
 };
 
 function detectSite() {
-  const url = window.location.hostname;
-  if (url.includes('chatgpt.com') || url.includes('chat.openai.com')) return 'chatgpt';
-  if (url.includes('claude.ai')) return 'claude';
-  if (url.includes('x.com') || url.includes('twitter.com')) return 'twitter';
+  const hostname = window.location.hostname;
+  if (/^([a-z0-9-]+\.)?chatgpt\.com$/.test(hostname) || /^([a-z0-9-]+\.)?chat\.openai\.com$/.test(hostname)) return 'chatgpt';
+  if (/^([a-z0-9-]+\.)?claude\.ai$/.test(hostname)) return 'claude';
+  if (/^([a-z0-9-]+\.)?x\.com$/.test(hostname) || /^([a-z0-9-]+\.)?twitter\.com$/.test(hostname)) return 'twitter';
   return 'article';
 }
 
@@ -27,31 +27,33 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       return;
     }
 
+    // Generate a nonce to validate postMessage authenticity
+    const nonce = crypto.getRandomValues(new Uint32Array(2)).join('-');
+
     // Load the scraper script
     const script = document.createElement('script');
     script.src = chrome.runtime.getURL(`scrapers/${site}.js`);
 
     let responded = false;
 
+    function respond(data) {
+      if (responded) return;
+      responded = true;
+      window.removeEventListener('message', handler);
+      clearTimeout(timeout);
+      sendResponse(data);
+    }
+
     // Timeout if scraping takes too long
     const timeout = setTimeout(() => {
-      if (!responded) {
-        responded = true;
-        window.removeEventListener('message', handler);
-        sendResponse({ error: 'Scraping timed out — the page may have an unusual structure' });
-      }
+      respond({ error: 'Scraping timed out — the page may have an unusual structure' });
     }, SCRAPE_TIMEOUT_MS);
 
     // Listen for the result via postMessage
     const handler = (event) => {
       if (event.origin !== window.location.origin) return;
       if (event.data?.type !== 'CONTEXT_SAVER_RESULT') return;
-
-      window.removeEventListener('message', handler);
-      clearTimeout(timeout);
-
-      if (responded) return;
-      responded = true;
+      if (event.data?.nonce !== nonce) return;
 
       const result = event.data.data;
       if (result) {
@@ -59,22 +61,31 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         result.url = window.location.href;
         result.savedAt = new Date().toISOString();
       }
-      sendResponse(result);
+      respond(result);
     };
     window.addEventListener('message', handler);
 
     script.onload = () => {
       script.remove();
-      // Call the scraper safely without template string injection
+      // Call the scraper with try-catch and nonce verification
       const execScript = document.createElement('script');
       execScript.textContent = `
         (function() {
-          var fn = window[${JSON.stringify(scraperFn)}];
-          var result = fn ? fn() : null;
-          window.postMessage({
-            type: 'CONTEXT_SAVER_RESULT',
-            data: result
-          }, window.location.origin);
+          try {
+            var fn = window[${JSON.stringify(scraperFn)}];
+            var result = fn ? fn() : null;
+            window.postMessage({
+              type: 'CONTEXT_SAVER_RESULT',
+              nonce: ${JSON.stringify(nonce)},
+              data: result
+            }, window.location.origin);
+          } catch (e) {
+            window.postMessage({
+              type: 'CONTEXT_SAVER_RESULT',
+              nonce: ${JSON.stringify(nonce)},
+              data: { error: 'Scraper error: ' + e.message }
+            }, window.location.origin);
+          }
         })();
       `;
       document.head.appendChild(execScript);
@@ -82,12 +93,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     };
 
     script.onerror = () => {
-      if (!responded) {
-        responded = true;
-        clearTimeout(timeout);
-        window.removeEventListener('message', handler);
-        sendResponse({ error: `Failed to load scraper for ${site}` });
-      }
+      respond({ error: `Failed to load scraper for ${site}` });
     };
 
     document.head.appendChild(script);

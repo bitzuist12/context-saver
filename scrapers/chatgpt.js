@@ -1,5 +1,5 @@
 function scrapeChatGPT() {
-  const title = document.title.replace(' | ChatGPT', '').replace(' - ChatGPT', '').trim() || 'Untitled Conversation';
+  const title = (document.title.replace(' | ChatGPT', '').replace(' - ChatGPT', '').trim() || 'Untitled Conversation').substring(0, 300);
   const messages = [];
 
   // ChatGPT renders conversation in article elements or divs with data-message-author-role

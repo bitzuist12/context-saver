@@ -17,7 +17,7 @@ function scrapeTwitter() {
 
   // Build title from first tweet
   const firstTweet = tweets[0];
-  const title = `${author} — ${firstTweet.substring(0, 80)}${firstTweet.length > 80 ? '...' : ''}`;
+  const title = `${author.substring(0, 100)} — ${firstTweet.substring(0, 80)}${firstTweet.length > 80 ? '...' : ''}`;
 
   const content = tweets.map((t, i) => `**${i + 1}.** ${t}`).join('\n\n');
 

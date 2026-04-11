@@ -1,3 +1,6 @@
+const ALLOWED_SITES = ['chatgpt', 'claude', 'twitter', 'article'];
+const MAX_CONTENT_LENGTH = 50_000_000; // 50MB
+
 const siteLabels = {
   chatgpt: 'ChatGPT',
   claude: 'Claude',
@@ -19,24 +22,44 @@ function formatDate(iso) {
 }
 
 function yamlSafe(str) {
-  // If the string contains characters that could break YAML, quote and escape it
-  if (/[\n\r"\\:#{}\[\],&*?|>!%@`]/.test(str) || str.startsWith(' ') || str.endsWith(' ')) {
-    return '"' + str.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"';
+  // Always quote and escape — safe for any input
+  return '"' + String(str)
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/\t/g, '\\t')
+    + '"';
+}
+
+function sanitizeError(msg) {
+  return String(msg || 'Unknown error').substring(0, 200);
+}
+
+function validateData(data) {
+  if (!data || typeof data !== 'object') return 'No data returned from scraper';
+  if (data.error) return sanitizeError(data.error);
+  if (typeof data.content !== 'string' || data.content.length === 0) return 'No content found on this page';
+  if (data.content.length > MAX_CONTENT_LENGTH) return 'Page content is too large to save';
+  if (typeof data.title !== 'string' || data.title.length === 0) {
+    data.title = 'Untitled';
   }
-  return '"' + str + '"';
+  if (!ALLOWED_SITES.includes(data.site)) return 'Invalid site type in scraper response';
+  return null; // valid
 }
 
 function buildMarkdown(data) {
+  const title = data.title.substring(0, 500);
   const lines = [
     '---',
-    `title: ${yamlSafe(data.title)}`,
+    `title: ${yamlSafe(title)}`,
     `source: ${data.site}`,
     `url: ${yamlSafe(data.url)}`,
     `saved_at: ${data.savedAt}`,
-    `messages: ${data.messageCount || 0}`,
+    `messages: ${Number(data.messageCount) || 0}`,
     '---',
     '',
-    `# ${data.title}`,
+    `# ${title}`,
     '',
     `> Saved from **${siteLabels[data.site] || data.site}** on ${formatDate(data.savedAt)}`,
     `> ${data.url}`,
@@ -51,6 +74,8 @@ async function init() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const pageTitle = document.getElementById('pageTitle');
   const siteType = document.getElementById('siteType');
+
+  if (!pageTitle || !siteType) return;
 
   pageTitle.textContent = tab.title || 'Unknown page';
 
@@ -94,7 +119,7 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
       data = await chrome.tabs.sendMessage(tab.id, { action: 'scrape' });
     } catch {
       // Content script not available — inject and scrape as article
-      const results = await chrome.scripting.executeScript({
+      await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         files: ['scrapers/article.js']
       });
@@ -116,8 +141,10 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
       data = execResults?.[0]?.result;
     }
 
-    if (!data || data.error || !data.content) {
-      status.textContent = data?.error || 'Nothing to save on this page';
+    // Validate scraper response
+    const error = validateData(data);
+    if (error) {
+      status.textContent = error;
       status.className = 'status error';
       btn.disabled = false;
       btn.textContent = 'Save as Markdown';
@@ -146,7 +173,7 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
     }, 2000);
 
   } catch (err) {
-    status.textContent = `Error: ${err.message}`;
+    status.textContent = `Error: ${sanitizeError(err.message)}`;
     status.className = 'status error';
     btn.disabled = false;
     btn.textContent = 'Save as Markdown';

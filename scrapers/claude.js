@@ -1,5 +1,5 @@
 function scrapeClaude() {
-  const title = document.title.replace(' - Claude', '').trim() || 'Untitled Conversation';
+  const title = (document.title.replace(' - Claude', '').trim() || 'Untitled Conversation').substring(0, 300);
   const messages = [];
 
   // Primary: grab all turn containers by data-testid
