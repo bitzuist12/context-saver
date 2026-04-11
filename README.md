@@ -2,18 +2,29 @@
 
 Chrome extension that saves conversations and articles as local Markdown files with YAML frontmatter. Zero dependencies, no external services — everything stays on your machine.
 
+<!-- TODO: Uncomment after Chrome Web Store approval
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/EXTENSION_ID)](https://chrome.google.com/webstore/detail/EXTENSION_ID)
+-->
+
+## Install
+
+**Chrome Web Store (recommended):**
+
+> Coming soon — store submission in progress.
+
+**Manual install (developers):**
+
+1. Clone this repo or download the ZIP
+2. Open `chrome://extensions/`
+3. Enable **Developer mode** (top right)
+4. Click **Load unpacked** and select this folder
+
 ## Supported Sites
 
 - **ChatGPT** — full conversation with role labels
 - **Claude** — full conversation with role labels
 - **X / Twitter** — threads with numbered tweets
 - **Any article** — extracts main content using readability heuristics
-
-## Install
-
-1. Open `chrome://extensions/`
-2. Enable **Developer mode** (top right)
-3. Click **Load unpacked** and select this folder
 
 ## Usage
 
@@ -75,6 +86,14 @@ scrapers/
 - `scripting` — inject scraper scripts into the page
 - `downloads` — save Markdown files
 - `storage` — remember your folder preference
+
+## Privacy
+
+Context Saver makes **zero network requests**. No analytics, no telemetry, no accounts. Your data never leaves your browser. See the full [Privacy Policy](PRIVACY.md).
+
+## Contributing
+
+Found a broken scraper? Want to add a new site? See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 
 ## License
 
