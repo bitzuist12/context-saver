@@ -26,16 +26,17 @@ function scrapeArticle() {
     }
   }
 
-  // Fallback: grab the largest text block in the page
+  // Fallback: find the largest text block within body's direct children and their immediate children
   if (!content) {
-    const allDivs = document.querySelectorAll('div, section');
+    const root = document.querySelector('main') || document.body;
+    const candidates = root.querySelectorAll(':scope > div, :scope > section, :scope > div > div, :scope > div > section');
     let maxLen = 0;
     let bestEl = null;
 
-    allDivs.forEach(div => {
-      const text = div.innerText.trim();
-      if (text.length > maxLen && text.length > 200) {
-        maxLen = text.length;
+    candidates.forEach(div => {
+      const len = div.innerText.length;
+      if (len > maxLen && len > 200) {
+        maxLen = len;
         bestEl = div;
       }
     });

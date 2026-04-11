@@ -2,11 +2,7 @@ function scrapeClaude() {
   const title = document.title.replace(' - Claude', '').trim() || 'Untitled Conversation';
   const messages = [];
 
-  // Claude.ai uses fieldset or div containers for each message turn
-  const humanMsgs = document.querySelectorAll('[data-testid="human-turn"], .font-user-message');
-  const assistantMsgs = document.querySelectorAll('[data-testid="assistant-turn"], .font-claude-message');
-
-  // Try structured approach: all turn containers
+  // Primary: grab all turn containers by data-testid
   const allTurns = document.querySelectorAll('[data-testid="human-turn"], [data-testid="assistant-turn"]');
 
   if (allTurns.length > 0) {

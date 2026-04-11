@@ -18,12 +18,20 @@ function formatDate(iso) {
   return d.toISOString().split('T')[0];
 }
 
+function yamlSafe(str) {
+  // If the string contains characters that could break YAML, quote and escape it
+  if (/[\n\r"\\:#{}\[\],&*?|>!%@`]/.test(str) || str.startsWith(' ') || str.endsWith(' ')) {
+    return '"' + str.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"';
+  }
+  return '"' + str + '"';
+}
+
 function buildMarkdown(data) {
   const lines = [
     '---',
-    `title: "${data.title.replace(/"/g, '\\"')}"`,
+    `title: ${yamlSafe(data.title)}`,
     `source: ${data.site}`,
-    `url: ${data.url}`,
+    `url: ${yamlSafe(data.url)}`,
     `saved_at: ${data.savedAt}`,
     `messages: ${data.messageCount || 0}`,
     '---',
@@ -108,8 +116,8 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
       data = execResults?.[0]?.result;
     }
 
-    if (!data || !data.content) {
-      status.textContent = 'Nothing to save on this page';
+    if (!data || data.error || !data.content) {
+      status.textContent = data?.error || 'Nothing to save on this page';
       status.className = 'status error';
       btn.disabled = false;
       btn.textContent = 'Save as Markdown';
