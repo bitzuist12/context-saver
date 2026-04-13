@@ -23,8 +23,9 @@ Context Saver lets you save AI conversations and web articles as clean Markdown 
 **How it works:**
 1. Navigate to a conversation or article
 2. Click the Context Saver icon
-3. Click "Save as Markdown"
-4. Done — file saves to your Downloads folder
+3. Optional: change the save folder prefix in the popup (for example, `Hamilton`)
+4. Click "Save as Markdown"
+5. Done — file saves inside your Chrome download directory
 
 **What you get:**
 Each file is a Markdown document with YAML frontmatter containing the title, source, URL, timestamp, and message count. Perfect for personal knowledge bases, Obsidian vaults, or archiving conversations for later reference.
@@ -36,7 +37,7 @@ Each file is a Markdown document with YAML frontmatter containing the title, sou
 • Fully open source: github.com/bitzuist12/context-saver
 
 **Customize:**
-Set a custom download folder prefix in the extension popup. Files organize automatically by site type and date.
+Set a custom download folder prefix in the extension popup. Example: `Hamilton` saves to `Downloads/Hamilton/chatgpt/...` if Chrome still uses the default Downloads folder. To save on Desktop instead, change Chrome's download location and keep using the popup prefix for organization.
 
 **Google Drive sync tip:**
 Point your Chrome downloads folder to a Google Drive-synced directory and your saves will auto-sync across devices.
@@ -69,7 +70,7 @@ Suggested screenshots:
 1. The popup open on a ChatGPT conversation (showing detected site + save button)
 2. The popup open on Claude showing "Saved! (24 messages)"
 3. A saved Markdown file opened in a text editor showing the YAML frontmatter
-4. The Downloads folder showing organized files: ContextSaver/chatgpt/, ContextSaver/claude/
+4. The download folder showing organized files such as ContextSaver/chatgpt/ or Hamilton/chatgpt/
 5. (Optional) The popup on a Twitter thread
 
 ### 5. Marquee promo tile — 1400x560 px (optional but recommended)

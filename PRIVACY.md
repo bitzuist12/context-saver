@@ -18,7 +18,7 @@ Context Saver does not collect, transmit, or store any personal data. Everything
 When you click the extension icon and press "Save":
 
 1. It reads the DOM content of the **current active tab only** to extract conversation text or article content.
-2. It saves a Markdown file to your local **Downloads** folder.
+2. It saves a Markdown file to your local Chrome download directory, inside the folder prefix you choose in the popup.
 
 The extension does **not** access any other tabs, browsing history, bookmarks, passwords, or cookies.
 
@@ -28,8 +28,8 @@ The extension does **not** access any other tabs, browsing history, bookmarks, p
 |---|---|
 | `activeTab` | Read the current page when you click the extension icon |
 | `scripting` | Inject content extraction scripts into the page |
-| `downloads` | Save the Markdown file to your Downloads folder |
-| `storage` | Remember your folder preference setting |
+| `downloads` | Save the Markdown file into Chrome's configured download directory |
+| `storage` | Remember your folder prefix setting |
 
 ## Third parties
 

@@ -30,14 +30,31 @@ Chrome extension that saves conversations and articles as local Markdown files w
 
 1. Navigate to a ChatGPT conversation, Claude chat, Twitter thread, or any article
 2. Click the Context Saver extension icon
-3. Click **Save as Markdown**
-4. File saves to `Downloads/ContextSaver/{site-type}/` as a `.md` file
+3. Optional: change **Save folder prefix** from `ContextSaver` to something like `Hamilton`
+4. Click **Save as Markdown**
+5. File saves inside Chrome's download directory as `{folder-prefix}/{site-type}/YYYY-MM-DD-title.md`
 
-You can customize the save folder prefix in the popup settings.
+Example: if the prefix is `Hamilton`, files save to `Downloads/Hamilton/chatgpt/` when Chrome is still using its default Downloads folder.
+
+## Changing Where Files Go
+
+The popup's **Save folder prefix** is a relative subfolder, not an absolute filesystem path.
+
+- `ContextSaver` -> `Downloads/ContextSaver/chatgpt/...`
+- `Hamilton` -> `Downloads/Hamilton/chatgpt/...`
+- `KnowledgeBase/AI` -> `Downloads/KnowledgeBase/AI/chatgpt/...`
+
+If you want files on your Desktop instead of Downloads:
+
+1. Open `chrome://settings/downloads`
+2. Change Chrome's download location to your Desktop or a Desktop subfolder
+3. Keep using the popup prefix to organize files inside that location
+
+Do not enter an absolute path like `/Users/you/Desktop/Hamilton` in the popup. Chrome's Downloads API only allows relative paths under Chrome's configured download directory.
 
 ## Google Drive Sync
 
-Point Chrome's download folder (or the `ContextSaver` subfolder) to a Google Drive-synced directory and your saves will auto-sync.
+Point Chrome's download folder to a Google Drive-synced directory, then use the popup prefix to organize files inside it.
 
 ## Output Format
 

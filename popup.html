@@ -105,6 +105,14 @@
       color: #555;
       margin-top: 4px;
     }
+    .settings-status {
+      min-height: 16px;
+      margin-top: 8px;
+      font-size: 11px;
+      color: #888;
+    }
+    .settings-status.success { color: #4ade80; }
+    .settings-status.error { color: #f87171; }
   </style>
 </head>
 <body>
@@ -122,9 +130,12 @@
   <div class="status" id="status"></div>
 
   <div class="settings">
-    <label>Save folder prefix</label>
+    <label>Default save folder prefix</label>
     <input type="text" id="folderPath" value="ContextSaver">
-    <div class="hint">Files download to your default Downloads folder under this subfolder</div>
+    <div class="hint">Example: <code>Hamilton</code> saves to <code>Downloads/Hamilton/chatgpt/...</code></div>
+    <div class="hint">This is saved as your default for future saves.</div>
+    <div class="hint">To save on Desktop, change Chrome's download location at <code>chrome://settings/downloads</code>.</div>
+    <div class="settings-status" id="folderStatus"></div>
   </div>
 
   <script src="popup.js"></script>
