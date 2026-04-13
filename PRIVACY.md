@@ -11,7 +11,7 @@ Context Saver does not collect, transmit, or store any personal data. Everything
 - **No data leaves your browser.** Context Saver runs entirely locally. It does not make any network requests, connect to any servers, or send data anywhere.
 - **No analytics or telemetry.** We do not track usage, page visits, or any user behavior.
 - **No accounts or sign-in.** The extension does not require or support any form of authentication.
-- **Local storage only.** The only data stored is your folder preference (saved in Chrome's local storage API). This never leaves your device.
+- **Local storage only.** The only data stored is your default folder prefix setting (saved in Chrome's local storage API). This never leaves your device.
 
 ## What the extension accesses
 

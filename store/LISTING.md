@@ -23,7 +23,7 @@ Context Saver lets you save AI conversations and web articles as clean Markdown 
 **How it works:**
 1. Navigate to a conversation or article
 2. Click the Context Saver icon
-3. Optional: change the save folder prefix in the popup (for example, `Hamilton`)
+3. Optional: set the default save folder prefix in the popup (for example, `Hamilton`)
 4. Click "Save as Markdown"
 5. Done — file saves inside your Chrome download directory
 
@@ -37,7 +37,7 @@ Each file is a Markdown document with YAML frontmatter containing the title, sou
 • Fully open source: github.com/bitzuist12/context-saver
 
 **Customize:**
-Set a custom download folder prefix in the extension popup. Example: `Hamilton` saves to `Downloads/Hamilton/chatgpt/...` if Chrome still uses the default Downloads folder. To save on Desktop instead, change Chrome's download location and keep using the popup prefix for organization.
+Set a default download folder prefix in the extension popup. Example: `Hamilton` saves to `Downloads/Hamilton/chatgpt/...` if Chrome still uses the default Downloads folder. To save on Desktop instead, change Chrome's download location and keep using the popup prefix for organization.
 
 **Google Drive sync tip:**
 Point your Chrome downloads folder to a Google Drive-synced directory and your saves will auto-sync across devices.

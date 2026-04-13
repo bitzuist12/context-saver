@@ -25,35 +25,5 @@
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  },
-  "content_scripts": [
-    {
-      "matches": [
-        "https://chatgpt.com/*",
-        "https://chat.openai.com/*",
-        "https://claude.ai/*",
-        "https://x.com/*",
-        "https://twitter.com/*"
-      ],
-      "js": ["content.js"],
-      "run_at": "document_idle"
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "scrapers/chatgpt.js",
-        "scrapers/claude.js",
-        "scrapers/twitter.js",
-        "scrapers/article.js"
-      ],
-      "matches": [
-        "https://chatgpt.com/*",
-        "https://chat.openai.com/*",
-        "https://claude.ai/*",
-        "https://x.com/*",
-        "https://twitter.com/*"
-      ]
-    }
-  ]
+  }
 }

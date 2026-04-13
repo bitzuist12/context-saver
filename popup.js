@@ -200,7 +200,7 @@ async function init() {
   const detectedSite = detectSiteFromUrl(tab.url);
   siteType.textContent = siteLabels[detectedSite] || detectedSite;
 
-  // Load saved folder preference
+  // Load saved default folder prefix
   const stored = await chrome.storage?.local?.get('folderPath').catch(() => null);
   if (stored?.folderPath) {
     folderInput.value = stored.folderPath;

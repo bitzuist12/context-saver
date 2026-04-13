@@ -30,7 +30,7 @@ Chrome extension that saves conversations and articles as local Markdown files w
 
 1. Navigate to a ChatGPT conversation, Claude chat, Twitter thread, or any article
 2. Click the Context Saver extension icon
-3. Optional: change **Save folder prefix** from `ContextSaver` to something like `Hamilton`
+3. Optional: change **Default save folder prefix** from `ContextSaver` to something like `Hamilton`
 4. Click **Save as Markdown**
 5. File saves inside Chrome's download directory as `{folder-prefix}/{site-type}/YYYY-MM-DD-title.md`
 
@@ -38,7 +38,7 @@ Example: if the prefix is `Hamilton`, files save to `Downloads/Hamilton/chatgpt/
 
 ## Changing Where Files Go
 
-The popup's **Save folder prefix** is a relative subfolder, not an absolute filesystem path.
+The popup's **Default save folder prefix** is a relative subfolder, not an absolute filesystem path.
 
 - `ContextSaver` -> `Downloads/ContextSaver/chatgpt/...`
 - `Hamilton` -> `Downloads/Hamilton/chatgpt/...`
@@ -83,11 +83,11 @@ messages: 24
 
 ## How It Works
 
-The extension uses a content script (`content.js`) that detects which site you're on and loads the appropriate scraper from `scrapers/`. Each scraper extracts content using site-specific DOM selectors with fallback heuristics. The popup (`popup.js`) orchestrates the flow and triggers a Markdown file download via the Chrome Downloads API.
+The popup (`popup.js`) detects the site from the active tab URL, injects the appropriate scraper with `chrome.scripting.executeScript`, validates the result, and then downloads a Markdown file through the Chrome Downloads API. Each scraper in `scrapers/` uses site-specific DOM selectors with fallback heuristics.
 
 ```
-popup.js          → UI + download logic
-content.js        → site detection + scraper loading
+manifest.json     → extension permissions + popup entrypoint
+popup.js          → UI, saved defaults, site detection, scrape orchestration
 scrapers/
   chatgpt.js      → ChatGPT conversation extractor
   claude.js       → Claude conversation extractor
@@ -100,9 +100,9 @@ scrapers/
 ## Permissions
 
 - `activeTab` — access the current tab when you click the extension
-- `scripting` — inject scraper scripts into the page
+- `scripting` — run scraper scripts in the active tab
 - `downloads` — save Markdown files
-- `storage` — remember your folder preference
+- `storage` — remember your default folder prefix
 
 ## Privacy
 
