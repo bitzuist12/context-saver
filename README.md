@@ -2,15 +2,13 @@
 
 Chrome extension that saves conversations and articles as local Markdown files with YAML frontmatter. Zero dependencies, no external services — everything stays on your machine.
 
-<!-- TODO: Uncomment after Chrome Web Store approval
-[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/EXTENSION_ID)](https://chrome.google.com/webstore/detail/EXTENSION_ID)
--->
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/dnolhppgecjeacfakijdggiodcopilik)](https://chromewebstore.google.com/detail/context-saver/dnolhppgecjeacfakijdggiodcopilik)
 
 ## Install
 
 **Chrome Web Store (recommended):**
 
-> Coming soon — store submission in progress.
+[Install from the Chrome Web Store](https://chromewebstore.google.com/detail/context-saver/dnolhppgecjeacfakijdggiodcopilik)
 
 **Manual install (developers):**
 
